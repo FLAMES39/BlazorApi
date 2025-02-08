@@ -1,7 +1,14 @@
 using BlazorApi.Data;
+using BlazorApi.Interfaces;
+using BlazorApi.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();
+builder.Services.AddAuthorization();
+builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Add services to the container.
 

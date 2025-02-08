@@ -1,12 +1,11 @@
 {
   "Version": 1,
-  "Hash": "q7X7UHbhV+ZVvFz1BMRQDaDqXY3LbuBU6Hov2MN3xxM=",
+  "Hash": "cfv1TJQlPj5I+NrlQ+BeOm9eJz1/NfbgO7SL6HAAfsQ=",
   "Source": "BlazorApi",
   "BasePath": "_content/BlazorApi",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
+  "Assets": []
 }

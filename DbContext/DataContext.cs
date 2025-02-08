@@ -10,6 +10,6 @@ namespace BlazorApi.Data
      
       
 
-        public DbSet<Person> Users { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }
