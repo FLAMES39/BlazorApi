@@ -10,7 +10,11 @@ builder.Services.AddAuthorization();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<JobService>();
+builder.Services.AddScoped<IJobs, JobService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+
+
 
 // Add services to the container.
 

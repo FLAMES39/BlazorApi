@@ -98,7 +98,6 @@ C:\Users\CHRISTIAN\source\repos\BlazorApi\obj\Debug\net8.0\BlazorApi.csproj.Core
 C:\Users\CHRISTIAN\source\repos\BlazorApi\obj\Debug\net8.0\BlazorApi.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\CHRISTIAN\source\repos\BlazorApi\obj\Debug\net8.0\BlazorApi.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\CHRISTIAN\source\repos\BlazorApi\obj\Debug\net8.0\BlazorApi.sourcelink.json
-C:\Users\CHRISTIAN\source\repos\BlazorApi\obj\Debug\net8.0\scopedcss\bundle\BlazorApi.styles.css
 C:\Users\CHRISTIAN\source\repos\BlazorApi\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\CHRISTIAN\source\repos\BlazorApi\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\CHRISTIAN\source\repos\BlazorApi\obj\Debug\net8.0\staticwebassets\msbuild.BlazorApi.Microsoft.AspNetCore.StaticWebAssets.props
@@ -106,6 +105,7 @@ C:\Users\CHRISTIAN\source\repos\BlazorApi\obj\Debug\net8.0\staticwebassets\msbui
 C:\Users\CHRISTIAN\source\repos\BlazorApi\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.BlazorApi.props
 C:\Users\CHRISTIAN\source\repos\BlazorApi\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.BlazorApi.props
 C:\Users\CHRISTIAN\source\repos\BlazorApi\obj\Debug\net8.0\staticwebassets.pack.json
+C:\Users\CHRISTIAN\source\repos\BlazorApi\obj\Debug\net8.0\scopedcss\bundle\BlazorApi.styles.css
 C:\Users\CHRISTIAN\source\repos\BlazorApi\obj\Debug\net8.0\BlazorApi.csproj.Up2Date
 C:\Users\CHRISTIAN\source\repos\BlazorApi\obj\Debug\net8.0\BlazorApi.dll
 C:\Users\CHRISTIAN\source\repos\BlazorApi\obj\Debug\net8.0\refint\BlazorApi.dll

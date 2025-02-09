@@ -48,15 +48,10 @@ namespace BlazorApi.Services
 
         }
 
-        public async Task<bool> SoftDelete(int jobId)
+        public async Task<bool> DeleteJob(int JobId)
         {
-            var job = await _context.Jobs
-                 .IgnoreQueryFilters()
-                 .FirstOrDefaultAsync(j => j.JobId == jobId);
-
+            var job = await _context.Jobs.FirstOrDefaultAsync(j => j.JobId ==JobId);
             if (job == null) return false;
-
-            if (job.IsDeleted) return false;
 
             job.IsDeleted = true;
             await _context.SaveChangesAsync();
@@ -64,6 +59,76 @@ namespace BlazorApi.Services
         }
 
 
+        public async Task<ActionResult<List<Jobs>>> GetAllJobs()
+        {
 
+            var jobs = await _context.Jobs
+                .Where(j => j.IsDeleted == j.IsDeleted)
+                .ToListAsync();
+
+
+            return jobs;
+        }
+
+        public async Task<ActionResult<Jobs>> GetSingleJob( int JobId)
+        {
+            try
+            {
+                var job = await _context.Jobs.FirstOrDefaultAsync(j => j.JobId == JobId);
+
+                if (job is null)
+                {
+                    return new ConflictObjectResult(new { message = "Job Doesn't Exist" });
+                }
+                return job;
+            }
+            catch (Exception ex) {
+                return  new ObjectResult(new { message = " An Error Occured while getting Jobs", error = ex.Message });
+            }
+
+        }
+
+        public async Task<ActionResult<List<Jobs>>> UpdateJobPost( int JobId, JobsDtocs jobsDtocs)
+        {
+            var job = await _context.Jobs.FirstOrDefaultAsync(j =>j.JobId ==  JobId && !j.IsDeleted);
+            if (job is null) {
+                return new ObjectResult(new { message = "Job Not Found" });
+            }
+            
+            job.JobName = jobsDtocs.JobName?? job.JobName;
+            job.JobName = jobsDtocs.JobDescription?? job.JobDescription;
+            job.JobRequirements = jobsDtocs.JobRequirements?? job.JobRequirements;
+            job.JobType = jobsDtocs.JobType?? job.JobType;
+            job.JobDescription = jobsDtocs.JobDescription ?? job.JobDescription;
+            job.SalaryRange = jobsDtocs.SalaryRange?? job.SalaryRange;
+            job.PostingDate = jobsDtocs.PostingDate;
+            job.ClosingDate = jobsDtocs.ClosingDate;
+
+
+            await _context.SaveChangesAsync();
+            var updatedJob = await _context.Jobs.Where(j => j.JobId == JobId).ToListAsync();
+            return updatedJob;
+
+        }
+
+        public async Task<ActionResult<List<Jobs>>> SearchJobs(JobSearchDto jobSearchDto)
+        {
+            var jobFound =  _context.Jobs.AsQueryable();
+            if (!string.IsNullOrEmpty(jobSearchDto.JobName)) {
+                jobFound = jobFound.Where(j => j.JobName.Contains(jobSearchDto.JobName));
+            }
+            if (jobSearchDto.CompanyId != null) { 
+                jobFound = jobFound.Where(j => j.CompanyId ==  jobSearchDto.CompanyId.Value);
+            }
+            if (jobSearchDto.JobType != null) {
+                jobFound = jobFound.Where(j => j.JobType == jobSearchDto.JobType);
+            }
+            
+            var job = await jobFound.ToListAsync();
+            if (job is null || job.Count == 0) {
+                return new NotFoundObjectResult(new { message = " No Jbs Available at The mMoment" });
+            }
+            return job;
+        }
     }
 }
