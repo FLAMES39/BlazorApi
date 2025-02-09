@@ -33,7 +33,7 @@ namespace BlazorApi.Services
                 
 
             };
-            Console.WriteLine(user);
+            
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
             return user;
