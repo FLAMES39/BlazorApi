@@ -15,7 +15,6 @@ namespace BlazorApi.Controllers
             _AuthService = AuthService;
         }
         [HttpPost("/register")]
-
         public async Task<ActionResult<User>> registerUser(UserDto userDto)
 
         {
@@ -23,6 +22,24 @@ namespace BlazorApi.Controllers
             {
                 var results = await _AuthService.CreateUser(userDto);
                 return Ok(results);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
+        [HttpPost("/login")]
+        public async Task<ActionResult<User>> loginUser(LoginDto loginDto)
+
+        {
+            try
+            {
+                var user = await _AuthService.AuthenticateUser(loginDto);
+                if (user == null) return Unauthorized("Invalid credentials");
+
+                var token = _AuthService.GenerateJwtToken(user);
+                return Ok(new { Token = token });
             }
             catch (Exception ex)
             {
