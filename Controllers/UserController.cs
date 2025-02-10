@@ -48,7 +48,7 @@ namespace BlazorApi.Controllers
 
         }
 
-        [HttpPost("/update")]
+        [HttpPut("/update")]
         public async Task<ActionResult<User>> updateUser(UpdateUserDto updateUserDto)
 
         {
