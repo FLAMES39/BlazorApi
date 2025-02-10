@@ -48,6 +48,7 @@ namespace BlazorApi.Controllers
 
         }
 
+<<<<<<< HEAD
         [HttpDelete("Delete/{UserId}")]
         public async Task<ActionResult<bool>> DeleteUser(int UserId)
         {
@@ -63,6 +64,20 @@ namespace BlazorApi.Controllers
             catch (Exception ex) 
             {
                  return BadRequest(new { Message = "Internal Server Error.", error = ex.Message }); 
+=======
+        [HttpPut("/update")]
+        public async Task<ActionResult<User>> updateUser(UpdateUserDto updateUserDto)
+
+        {
+            try
+            {
+               var result = await _AuthService.updateUserDetails(updateUserDto);
+               return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+>>>>>>> 21e0d4b7323b38f9728a3bdd9468740ea4607ae7
             }
 
         }
