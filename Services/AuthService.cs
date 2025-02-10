@@ -76,6 +76,22 @@ namespace BlazorApi.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        public async Task<User> updateUserDetails(UpdateUserDto updateUserDto)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == updateUserDto.Id);
+            if(user == null)
+            {
+                return null;
+            }
+            user.Names = updateUserDto.Names;
+            user.Email = updateUserDto.Email;
+            user.PhoneNumber = updateUserDto.PhoneNumber;
+            user.Description = updateUserDto.Description;
+
+            await _context.SaveChangesAsync();
+            return user;
+        }
     }
 
 }

@@ -47,5 +47,21 @@ namespace BlazorApi.Controllers
             }
 
         }
+
+        [HttpPost("/update")]
+        public async Task<ActionResult<User>> updateUser(UpdateUserDto updateUserDto)
+
+        {
+            try
+            {
+               var result = await _AuthService.updateUserDetails(updateUserDto);
+               return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
     }
 }
