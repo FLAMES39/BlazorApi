@@ -10,6 +10,8 @@ namespace BlazorApi.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Jobs> Jobs { get; set; }
 
+        public DbSet<Applications> Applications { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);  // Call base to avoid overriding other configurations

@@ -12,8 +12,9 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<JobService>();
 builder.Services.AddScoped<IJobs, JobService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-
-
+builder.Services.AddScoped<ApplicationService>();
+//builder.Services.AddScoped<IApplications, ApplicationService>();
+builder.Services.AddScoped<IApplications, ApplicationService>();
 
 
 // Add services to the container.

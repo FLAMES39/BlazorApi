@@ -19,12 +19,12 @@ namespace BlazorApi.Services
         }
 
 
-        public async Task<ActionResult<Jobs>> PostJob(JobsDtocs jobDto)
+        public async Task<Jobs> PostJob(JobsDtocs jobDto)
         {
             var isExistingJob = await _context.Jobs.AnyAsync(j => j.JobName == jobDto.JobName && j.CompanyId == jobDto.CompanyId);
             if (isExistingJob) {
-                // Console.WriteLine("Job Already exists");
-                return new ConflictObjectResult(new { message = "Job Already Exists" });
+                 Console.WriteLine("Job Already exists");
+               // return new ConflictObjectResult(new { message = "Job Already Exists" });
             }
 
             var job = new Jobs
@@ -59,7 +59,7 @@ namespace BlazorApi.Services
         }
 
 
-        public async Task<ActionResult<List<Jobs>>> GetAllJobs()
+        public async Task<List<Jobs>> GetAllJobs()
         {
 
             var jobs = await _context.Jobs
@@ -94,9 +94,13 @@ namespace BlazorApi.Services
             if (job is null) {
                 return new ObjectResult(new { message = "Job Not Found" });
             }
-            
+
+            if (jobsDtocs.ClosingDate < jobsDtocs.PostingDate) 
+            {
+                Console.WriteLine("ClosingDate Cannot be Earlier than PostingDta");
+            }
             job.JobName = jobsDtocs.JobName?? job.JobName;
-            job.JobName = jobsDtocs.JobDescription?? job.JobDescription;
+            job.JobDescription = jobsDtocs.JobDescription?? job.JobDescription;
             job.JobRequirements = jobsDtocs.JobRequirements?? job.JobRequirements;
             job.JobType = jobsDtocs.JobType?? job.JobType;
             job.JobDescription = jobsDtocs.JobDescription ?? job.JobDescription;

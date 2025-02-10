@@ -54,7 +54,7 @@ namespace BlazorApi.Controllers
             try
             {
                 var allJobs = await _jobService.GetAllJobs();
-                if (allJobs.Value == null || allJobs.Value.Count == 0)
+                if (allJobs == null || allJobs.Count == 0)
                 {
                     return BadRequest("No Jobs Found");
                 }
