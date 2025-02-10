@@ -78,7 +78,7 @@ namespace BlazorApi.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-<<<<<<< HEAD
+
 
         public async Task<bool> DeleteUser(int UserId)
         {
@@ -89,10 +89,10 @@ namespace BlazorApi.Services
             user.IsDeleted = true;           
             await _context.SaveChangesAsync();
             return true;
-=======
+        }
         public async Task<User> updateUserDetails(UpdateUserDto updateUserDto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == updateUserDto.Id);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == updateUserDto.UserId);
             if(user == null)
             {
                 return null;
@@ -104,7 +104,7 @@ namespace BlazorApi.Services
 
             await _context.SaveChangesAsync();
             return user;
->>>>>>> 21e0d4b7323b38f9728a3bdd9468740ea4607ae7
+
         }
     }
 

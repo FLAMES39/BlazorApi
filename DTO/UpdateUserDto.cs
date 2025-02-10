@@ -2,7 +2,7 @@
 {
     public class UpdateUserDto
     {
-        public int Id { get; set; }
+        public int UserId { get; set; }
         public string Names { get; set; }
 
         public string Description { get; set; } = string.Empty;
