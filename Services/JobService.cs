@@ -26,7 +26,6 @@ namespace BlazorApi.Services
                  Console.WriteLine("Job Already exists");
                // return new ConflictObjectResult(new { message = "Job Already Exists" });
             }
-
             var job = new Jobs
             {
                 JobName = jobDto.JobName,
@@ -39,9 +38,12 @@ namespace BlazorApi.Services
                 ClosingDate = jobDto.ClosingDate,
                 CompanyId = jobDto.CompanyId,
                 IsDeleted = false,
+                Jobink = $"https://localhost:7068/job/{Guid.NewGuid()}"
 
             };
-              
+
+           
+
             await _context.Jobs.AddAsync(job);
             await _context.SaveChangesAsync();
             return job;
@@ -70,34 +72,30 @@ namespace BlazorApi.Services
             return jobs;
         }
 
-        public async Task<ActionResult<Jobs>> GetSingleJob( int JobId)
+        public async Task<Jobs> GetSingleJob( int JobId)
         {
-            try
-            {
+            
                 var job = await _context.Jobs.FirstOrDefaultAsync(j => j.JobId == JobId);
 
                 if (job is null)
                 {
-                    return new ConflictObjectResult(new { message = "Job Doesn't Exist" });
+                    return null;
                 }
                 return job;
-            }
-            catch (Exception ex) {
-                return  new ObjectResult(new { message = " An Error Occured while getting Jobs", error = ex.Message });
-            }
-
+            
+      
         }
 
-        public async Task<ActionResult<List<Jobs>>> UpdateJobPost( int JobId, JobsDtocs jobsDtocs)
+        public async Task<List<Jobs>> UpdateJobPost( int JobId, JobsDtocs jobsDtocs)
         {
             var job = await _context.Jobs.FirstOrDefaultAsync(j =>j.JobId ==  JobId && !j.IsDeleted);
             if (job is null) {
-                return new ObjectResult(new { message = "Job Not Found" });
+                return null;
             }
 
             if (jobsDtocs.ClosingDate < jobsDtocs.PostingDate) 
             {
-                Console.WriteLine("ClosingDate Cannot be Earlier than PostingDta");
+                Console.WriteLine("ClosingDate Cannot be Earlier than PostingDate");
             }
             job.JobName = jobsDtocs.JobName?? job.JobName;
             job.JobDescription = jobsDtocs.JobDescription?? job.JobDescription;
@@ -115,7 +113,7 @@ namespace BlazorApi.Services
 
         }
 
-        public async Task<ActionResult<List<Jobs>>> SearchJobs(JobSearchDto jobSearchDto)
+        public async Task<List<Jobs>> SearchJobs(JobSearchDto jobSearchDto)
         {
             var jobFound =  _context.Jobs.AsQueryable();
             if (!string.IsNullOrEmpty(jobSearchDto.JobName)) {
@@ -130,9 +128,21 @@ namespace BlazorApi.Services
             
             var job = await jobFound.ToListAsync();
             if (job is null || job.Count == 0) {
-                return new NotFoundObjectResult(new { message = " No Jbs Available at The mMoment" });
+                Console.WriteLine("No jobs at the Moment");
             }
             return job;
         }
+
+       public async Task<Jobs> GetJobLink(string jobink)
+        {
+            var  jobLink = await _context.Jobs.FirstOrDefaultAsync(jl => jl.Jobink ==  jobink && !jl.IsDeleted);
+            if (jobLink == null) {
+                Console.WriteLine("No JobLink AVAILABLE");
+                    
+            }
+            return jobLink;
+        }
+
+
     }
 }

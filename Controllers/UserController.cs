@@ -47,5 +47,24 @@ namespace BlazorApi.Controllers
             }
 
         }
+
+        [HttpDelete("Delete/{UserId}")]
+        public async Task<ActionResult<bool>> DeleteUser(int UserId)
+        {
+            try
+            {
+                var user = await _AuthService.DeleteUser(UserId);
+                if (!user )
+                {
+                    return Unauthorized("User Doesn't Exist");
+                }
+                return Ok("User Deleted successfully");
+            }
+            catch (Exception ex) 
+            {
+                 return BadRequest(new { Message = "Internal Server Error.", error = ex.Message }); 
+            }
+
+        }
     }
 }

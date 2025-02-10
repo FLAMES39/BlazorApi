@@ -6,17 +6,19 @@
 
         public  int UserId { get; set; }
 
+        public string UserName { get; set; }
+
         public string Email { get; set; }
 
         public DateTime ApplicationDate { get; set; } = DateTime.Now;
 
-        public string ResumePath { get; set; }
+        public IFormFile ResumePath { get; set; }
 
-        public string CoverLetter { get; set; }
+        public IFormFile CoverLetter { get; set; }
 
         public string City { get; set; }
 
-        public string Stret { get; set; }
+        public string Street { get; set; }
 
         public string PhoneNumber { get; set; }
 

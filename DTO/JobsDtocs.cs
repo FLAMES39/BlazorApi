@@ -14,6 +14,8 @@
 
         public string SalaryRange { get; set; }
 
+        public string Jobink { get; set; }
+
         public bool IsDeleted { get; set; }
 
         public int CompanyId { get; set; }

@@ -13,6 +13,8 @@ namespace BlazorApi.Models
         [Required]  
         public int UserId { get; set; }
 
+        public string UserName { get; set;}
+
         [Required]
         public string Email { get; set; }
 

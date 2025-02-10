@@ -2,7 +2,7 @@
 {
     public class User
     {
-        public int Id { get; set; }
+        public int UserId { get; set; }
         public string Names { get; set; } 
 
         public string Password { get; set; }
@@ -14,6 +14,8 @@
         public string Role { get; set; } = "User";
 
         public long PhoneNumber { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
 
 
     }

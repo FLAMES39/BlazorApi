@@ -7,13 +7,16 @@ namespace BlazorApi.Models
         [Key]
         public int JobId { get; set; }
 
+        [Required]
         public string JobName { get; set; }
 
         public string JobDescription { get; set; } = string.Empty;
 
-        public string JobStatus { get; set; } = "Not Applied";
+        public string JobStatus { get; set; } = "Open";
 
         public string JobType { get; set; }
+
+        public string Jobink { get; set; }
 
         public string JobRequirements { get; set; }
 
@@ -27,6 +30,7 @@ namespace BlazorApi.Models
 
         public int CompanyId { get; set; }
 
+       
         //public Company Company { get; set; }
 
         //public ICollection<Application> Applications {get; set;}

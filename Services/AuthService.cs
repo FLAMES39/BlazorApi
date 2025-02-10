@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace BlazorApi.Services
@@ -75,6 +76,18 @@ namespace BlazorApi.Services
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+
+        public async Task<bool> DeleteUser(int UserId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == UserId );
+            if (user == null) return false;
+
+
+            user.IsDeleted = true;           
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 

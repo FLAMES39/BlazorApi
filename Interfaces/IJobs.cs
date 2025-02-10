@@ -1,5 +1,4 @@
-﻿
-using BlazorApi.Models;
+﻿using BlazorApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using BlazorApi.DTO;
 namespace BlazorApi.Interfaces
@@ -9,9 +8,9 @@ namespace BlazorApi.Interfaces
         Task<Jobs> PostJob(JobsDtocs jobsDtocs);
         Task<bool> DeleteJob(int JobId);
         Task<List<Jobs>> GetAllJobs();
-        Task<ActionResult<Jobs>> GetSingleJob(int JobId);
-        Task<ActionResult<List<Jobs>>> UpdateJobPost(int JobId, JobsDtocs jobsDtocs);
-        Task<ActionResult<List<Jobs>>> SearchJobs(JobSearchDto jobSearchDto);
+        Task<Jobs> GetSingleJob(int JobId);
+        Task<List<Jobs>> UpdateJobPost(int JobId, JobsDtocs jobsDtocs);
+        Task<List<Jobs>> SearchJobs(JobSearchDto jobSearchDto);
 
     }
 

@@ -8,5 +8,6 @@ namespace BlazorApi.Interfaces
         Task<User> CreateUser(UserDto userDto);
         Task<User> AuthenticateUser(LoginDto loginDto); 
         public string GenerateJwtToken(User user);
+        Task<bool> DeleteUser(int UserId);
     }
 }

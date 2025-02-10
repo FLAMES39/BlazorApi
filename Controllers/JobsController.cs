@@ -11,7 +11,7 @@ namespace BlazorApi.Controllers
     {
         private JobService _jobService;
 
-        public JobsController( JobService jobService)
+        public JobsController(JobService jobService)
         {
             _jobService = jobService;
         }
@@ -21,10 +21,11 @@ namespace BlazorApi.Controllers
         {
             try
             {
-                var results = await _jobService.PostJob (jobsDtocs);
-                return Ok (results);
+                var results = await _jobService.PostJob(jobsDtocs);
+                return Ok(results);
             }
-            catch (Exception ex) { 
+            catch (Exception ex)
+            {
                 throw new Exception(ex.Message);
             }
         }
@@ -36,7 +37,7 @@ namespace BlazorApi.Controllers
         {
             try
             {
-                var job = await _jobService.DeleteJob (JobId);
+                var job = await _jobService.DeleteJob(JobId);
                 if (!job)
                 {
                     return NotFound("Job Not Found");
@@ -45,11 +46,12 @@ namespace BlazorApi.Controllers
 
                 return Ok(new { message = $"Job with JobId {JobId} Successufully Deleted" });
 
-            }catch  (Exception ex) { return BadRequest(new { Message = "Internal Server Error.",error = ex.Message}); }
+            }
+            catch (Exception ex) { return BadRequest(new { Message = "Internal Server Error.", error = ex.Message }); }
         }
 
         [HttpGet("GetAllJobs")]
-        public async Task<ActionResult<List<Jobs>>>GetAllJobs()
+        public async Task<ActionResult<List<Jobs>>> GetAllJobs()
         {
             try
             {
@@ -60,7 +62,8 @@ namespace BlazorApi.Controllers
                 }
                 return Ok(allJobs);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
 
@@ -74,12 +77,13 @@ namespace BlazorApi.Controllers
                 var job = await _jobService.GetSingleJob(JobId);
                 return Ok(job);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
 
-        [HttpPut ("updateJobPost/{JobId}")]
+        [HttpPut("updateJobPost/{JobId}")]
         public async Task<ActionResult<Jobs>> UpdateJobPost(int JobId, JobsDtocs jobsDtocs)
         {
             try
@@ -87,7 +91,8 @@ namespace BlazorApi.Controllers
                 var job = await _jobService.UpdateJobPost(JobId, jobsDtocs);
                 return Ok(job);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return BadRequest("Job Does Not Exist");
             }
         }
@@ -106,14 +111,35 @@ namespace BlazorApi.Controllers
                 }
                 return Ok(job);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return BadRequest("Job Does Not Exist");
             }
         }
 
-        
 
-       
+        [HttpGet("GetJobLink/{Jobink}")]
+        public async Task<ActionResult<Jobs>> GetJobLink(string Jobink)
+        {
+            try
+            {
+                var jobLink = await _jobService.GetJobLink(Jobink);
+                if (jobLink == null)
+                {
+                    return StatusCode(500, $"No JobLink Found");
+                }
+                return Ok(jobLink);
+            }
+            catch (Exception ex)
+            {
+                {
+                    return BadRequest("No job LInk Available");
+                }
+            }
+
+
+
+
+        }
     }
 }
