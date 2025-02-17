@@ -125,6 +125,9 @@ namespace BlazorApi.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Jobink")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Location")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -154,7 +157,7 @@ namespace BlazorApi.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
@@ -167,14 +170,18 @@ namespace BlazorApi.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<long>("PhoneNumber")
-                        .HasColumnType("bigint");
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("UserId");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });

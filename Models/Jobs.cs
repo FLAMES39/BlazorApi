@@ -16,11 +16,13 @@ namespace BlazorApi.Models
 
         public string JobType { get; set; }
 
-        public string Jobink { get; set; }
+        public string? Jobink { get; set; }
 
         public string JobRequirements { get; set; }
 
         public string SalaryRange { get; set; }
+
+        public string Location { get; set; } = string.Empty;    
 
         public bool IsDeleted { get; set; } = false;
 

@@ -9,5 +9,8 @@ namespace BlazorApi.Interfaces
         Task<User> AuthenticateUser(LoginDto loginDto); 
         public string GenerateJwtToken(User user);
         Task<bool> DeleteUser(int UserId);
+        Task<User> GetUserById(int UserId);
+
+
     }
 }

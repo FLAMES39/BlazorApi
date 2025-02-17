@@ -2,6 +2,7 @@
 using BlazorApi.Models;
 using BlazorApi.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApi.Controllers
 {
@@ -16,7 +17,7 @@ namespace BlazorApi.Controllers
             _jobService = jobService;
         }
 
-        [HttpPost("/postjob")]
+        [HttpPost("postjob")]
         public async Task<ActionResult<Jobs>> posJob(JobsDtocs jobsDtocs)
         {
             try
@@ -24,11 +25,16 @@ namespace BlazorApi.Controllers
                 var results = await _jobService.PostJob(jobsDtocs);
                 return Ok(results);
             }
+            catch (DbUpdateException ex)
+            {
+                return Conflict(new { message = "A database update error occurred.", details = ex.InnerException?.Message });
+            }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new { message = ex.Message });
             }
         }
+
 
 
         [HttpDelete("DeleteJob/{JobId}")]
@@ -137,9 +143,22 @@ namespace BlazorApi.Controllers
                 }
             }
 
-
-
-
         }
+
+        [HttpGet("job-details/{JobId}")]
+        public async Task<ActionResult<Jobs>> GetJobDetails(int JobId)
+        {
+            try
+            {
+                var job = await _jobService.GetSingleJob(JobId);
+                if (job == null) return NotFound("Job not found.");
+                return Ok(job);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
     }
 }

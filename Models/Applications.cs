@@ -38,5 +38,9 @@ namespace BlazorApi.Models
 
         public DateTime DeleteAt { get; set; }
 
+        public string? TemporaryPassword { get; set; }
+        public DateTime? TempPasswordExpiry { get; set; }
+        public string? TemporaryEmail { get; set; }
+
     }
 }

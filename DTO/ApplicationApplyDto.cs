@@ -24,5 +24,11 @@
 
         public string PostalCode { get; set; }
 
+        public string? TemporaryPassword { get; set; }
+
+        public DateTime? TempPasswordExpiry { get; set; }
+
+        public string? TemporaryEmail { get; set; }
+
     }
 }

@@ -5,13 +5,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorApi.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class ApplicationController : Controller
     {
         private ApplicationService _ApplicationService;
-
-        public ApplicationController(ApplicationService ApplicationService)
+        private readonly TemporaryCredentialsService _temporaryCredentialsService;
+        public ApplicationController(ApplicationService ApplicationService, TemporaryCredentialsService temporaryCredentialsService)
         {
             _ApplicationService = ApplicationService;
+            _temporaryCredentialsService = temporaryCredentialsService;
+
         }
 
         [HttpGet("GetAllApplications")]
@@ -42,7 +46,7 @@ namespace BlazorApi.Controllers
                   var application = await _ApplicationService.GetApplicationById(ApplicationId);
                   if (application == null)
                   {
-                      return NotFound("ApplicationDoes not Exist");
+                      return NotFound("Application Does not Exist");
                   }
                   return Ok(application);
               }
@@ -73,23 +77,33 @@ namespace BlazorApi.Controllers
                 return StatusCode (500, $"Internal Server Error, {ex.Message}. ");
             }
         }
-
         [HttpPost("ApplyJob")]
-        public async Task<ActionResult<Applications>> ApplyJob([FromForm]ApplicationApplyDto applicationApplyDto)
+        public async Task<ActionResult<Applications>> ApplyJob([FromForm] ApplicationApplyDto applicationApplyDto)
         {
             try
             {
-                var application = await _ApplicationService.ApplyJob(applicationApplyDto);
-                if(application == null)
+                if (applicationApplyDto.CoverLetter == null || applicationApplyDto.ResumePath == null)
                 {
-                    return NotFound("Application Doesn't Exist");
+                    return BadRequest("Both Resume and Cover Letter are required.");
                 }
+
+                var application = await _ApplicationService.ApplyJob(applicationApplyDto);
+                if (application == null)
+                {
+                    return NotFound("Application failed.");
+                }
+
                 return Ok(application);
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
-                return StatusCode (500, $"Internal Server Error, Application was not Processed.  {ex.Message}" );
+                Console.WriteLine($"Error in ApplyJob: {ex.Message}");
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
+
+
+
 
         private async Task<string> SaveFileOnDisk(IFormFile file, string folderName)
         {
@@ -131,5 +145,22 @@ namespace BlazorApi.Controllers
             }
         }
 
+        [HttpPost("GenerateTemporaryCredentials")]
+        public async Task<ActionResult> GenerateTemporaryCredentials(int UserId)
+        {
+            try
+            {
+                var result = await _temporaryCredentialsService.GenerateTemporaryCredentials(UserId);
+                if (result == null)
+                {
+                    return NotFound("Applicant not found or failed to generate temporary credentials.");
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }

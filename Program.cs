@@ -3,6 +3,7 @@ using BlazorApi.Interfaces;
 using BlazorApi.Services;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -13,11 +14,24 @@ builder.Services.AddScoped<JobService>();
 builder.Services.AddScoped<IJobs, JobService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ApplicationService>();
+builder.Services.AddScoped<TemporaryCredentialsService>();
+builder.Services.AddScoped<ITempCredemtials, TemporaryCredentialsService>();
+
+
 //builder.Services.AddScoped<IApplications, ApplicationService>();
 builder.Services.AddScoped<IApplications, ApplicationService>();
 
 
 // Add services to the container.
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseMySql(
@@ -42,8 +56,21 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Uploads")),
+    RequestPath = "/Uploads"
+});
+
+
 app.MapControllers();
 
 app.UseStaticFiles();
+
+app.UseCors(builder =>
+    builder.AllowAnyOrigin()
+           .AllowAnyMethod()
+           .AllowAnyHeader());
+
 
 app.Run();

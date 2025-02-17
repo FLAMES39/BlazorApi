@@ -12,6 +12,8 @@ namespace BlazorApi.Data
 
         public DbSet<Applications> Applications { get; set; }
 
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);  // Call base to avoid overriding other configurations
@@ -25,6 +27,15 @@ namespace BlazorApi.Data
                 .Property(j => j.JobName)
                 .IsRequired()
                 .HasMaxLength(100);  // Set max length for JobName to 100 characters
+            modelBuilder.Entity<User>()
+                .Property(u => u.UserId)
+                .HasColumnType("int");
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
+
+
         }
     }
 }

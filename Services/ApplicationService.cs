@@ -23,16 +23,28 @@ namespace BlazorApi.Services
 
         public async Task<List<Applications>> GetAllApplications()
         {
-            var application = await _context.Applications
-                .Where(a => a.IsDelete == a.IsDelete)
+            var applications = await _context.Applications
+                .Where(a => !a.IsDelete)
+                .Select(a => new Applications
+                {
+                    ApplicationId = a.ApplicationId,
+                    JobId = a.JobId,
+                    UserId = a.UserId,
+                    UserName = a.UserName,
+                    Email = a.Email,
+                    ApplicationDate = a.ApplicationDate,
+                    ResumePath = a.ResumePath,  // Convert to full URL
+                    CoverLetter =  a.CoverLetter,  // Convert to full URL
+                    City = a.City,
+                    Street = a.Street,
+                    PhoneNumber = a.PhoneNumber,
+                    PostalCode = a.PostalCode,
+                })
                 .ToListAsync();
 
-            if (application is null)
-            {
-                Console.WriteLine("No Application Available at the Moment");
-            }
-            return application;
+            return applications;
         }
+
 
         public async Task<Applications> GetApplicationById(int ApplicationId)
         {
@@ -78,7 +90,11 @@ namespace BlazorApi.Services
             {
                 return null;
             }
-
+            if (applicationApplyDto.JobId == 0)
+            {
+                Console.WriteLine(applicationApplyDto.JobId);
+                return null;
+            }
             var application = new Applications
             {
                 JobId = applicationApplyDto.JobId,
@@ -92,11 +108,14 @@ namespace BlazorApi.Services
                 Street = applicationApplyDto.Street,
                 PhoneNumber = applicationApplyDto.PhoneNumber,
                 PostalCode = applicationApplyDto.PostalCode,
+                TemporaryPassword = applicationApplyDto.TemporaryPassword,
+                TempPasswordExpiry = applicationApplyDto.TempPasswordExpiry
+
             };
-            Console.WriteLine("Application not Successful");
+            Console.WriteLine(application);
             await _context.Applications.AddAsync(application);
             await _context.SaveChangesAsync();
-            await SendEmail("mashadachris85@gmail.com", "JOB APPLIED", "Application Received");
+            await SendEmail(application.Email, "JOB APPLIED", "Thank you for applying for the [Job Title] position at [Company Name] through SunPro Jobs.\r\n\r\nWe have successfully received your application, and our hiring team is currently reviewing your submitted documents. ");
             return application;
         }
 
@@ -113,6 +132,7 @@ namespace BlazorApi.Services
             {
                 Directory.CreateDirectory(uploadsFolderPath);
             }
+
             var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
             var filePath = Path.Combine(uploadsFolderPath, uniqueFileName);
 
@@ -121,17 +141,16 @@ namespace BlazorApi.Services
                 await file.CopyToAsync(stream);
             }
 
-            // Save the relative file path (optional)
-            var relativePath = Path.Combine("Uploads", uniqueFileName);
-            return relativePath;
+            return Path.Combine("Uploads", uniqueFileName);  // Return relative path
         }
 
-        static async Task SendEmail(string to, string subject, string body)
+
+        public async Task SendEmail(string to, string subject, string body)
         {
             try
             {
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("chtistian ", "christianabiodun2020@gmail.com"));
+                message.From.Add(new MailboxAddress("christian", "christianabiodun2020@gmail.com"));
                 message.To.Add(new MailboxAddress("", to));
                 message.Subject = subject;
                 message.Body = new TextPart("html") { Text = body };
@@ -172,6 +191,8 @@ namespace BlazorApi.Services
             await _context.SaveChangesAsync();
             return application;
         }
+
+
     }
 
 }

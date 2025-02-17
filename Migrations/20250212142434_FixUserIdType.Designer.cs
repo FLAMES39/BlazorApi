@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250210180408_joblinkmigrationupdates")]
-    partial class joblinkmigrationupdates
+    [Migration("20250212142434_FixUserIdType")]
+    partial class FixUserIdType
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -170,8 +170,9 @@ namespace BlazorApi.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<long>("PhoneNumber")
-                        .HasColumnType("bigint");
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Role")
                         .IsRequired()

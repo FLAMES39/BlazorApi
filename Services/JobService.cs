@@ -22,10 +22,11 @@ namespace BlazorApi.Services
         public async Task<Jobs> PostJob(JobsDtocs jobDto)
         {
             var isExistingJob = await _context.Jobs.AnyAsync(j => j.JobName == jobDto.JobName && j.CompanyId == jobDto.CompanyId);
-            if (isExistingJob) {
-                 Console.WriteLine("Job Already exists");
-               // return new ConflictObjectResult(new { message = "Job Already Exists" });
+            if (isExistingJob)
+            {
+                throw new Exception("Job with this title already exists.");
             }
+
             var job = new Jobs
             {
                 JobName = jobDto.JobName,
@@ -37,18 +38,21 @@ namespace BlazorApi.Services
                 SalaryRange = jobDto.SalaryRange,
                 ClosingDate = jobDto.ClosingDate,
                 CompanyId = jobDto.CompanyId,
-                IsDeleted = false,
-                Jobink = $"https://localhost:7068/job/{Guid.NewGuid()}"
-
+                IsDeleted = false
             };
-
-           
 
             await _context.Jobs.AddAsync(job);
             await _context.SaveChangesAsync();
-            return job;
 
+            job.Jobink = $"https://localhost:7185/job-details/{job.JobId}";
+
+            _context.Jobs.Update(job);
+            await _context.SaveChangesAsync();
+
+            return job;
         }
+
+
 
         public async Task<bool> DeleteJob(int JobId)
         {
@@ -63,11 +67,18 @@ namespace BlazorApi.Services
 
         public async Task<List<Jobs>> GetAllJobs()
         {
-
+            
             var jobs = await _context.Jobs
                 .Where(j => j.IsDeleted == j.IsDeleted)
                 .ToListAsync();
-
+            if (jobs != null)
+            {
+                foreach (var j in jobs)
+                {
+                    j.Jobink = j.Jobink != null ? j.Jobink : "";
+                    j.Location = j.Location != null ? j.Location : "";
+                }
+            }
 
             return jobs;
         }

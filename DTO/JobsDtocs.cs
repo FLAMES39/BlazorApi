@@ -12,6 +12,8 @@
 
         public string JobRequirements { get; set; }
 
+        public string Location { get; set; }
+
         public string SalaryRange { get; set; }
 
         public string Jobink { get; set; }
