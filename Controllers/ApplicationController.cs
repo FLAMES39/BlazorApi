@@ -70,7 +70,7 @@ namespace BlazorApi.Controllers
                 {
                     return NotFound("Application Not Found");
                 }
-                return Ok(new { message = $"Job with JobId {ApplicationId} Successufully Deleted" });
+                return Ok(new { message = $"Application with ApplicationId {ApplicationId} Successufully Deleted" });
             }
             catch (Exception ex) 
             {

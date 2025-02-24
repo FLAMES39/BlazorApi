@@ -30,7 +30,7 @@ namespace BlazorApi.Services
 
             // Generate a temporary password
             string tempPassword = GenerateRandomPassword();
-            application.TemporaryPassword = tempPassword;
+            application.TemporaryPassword = BCrypt.Net.BCrypt.HashPassword(tempPassword);
             application.TempPasswordExpiry = DateTime.UtcNow.AddMinutes(2); // Ensure expiration is correctly set
             application.TemporaryEmail = application.Email;
 
@@ -66,7 +66,7 @@ namespace BlazorApi.Services
                 message.Subject = "Your Temporary Credentials for SunPro Jobs";
                 message.Body = new TextPart("plain")
                 {
-                    Text = $"Dear Applicant,\n\nHere are your temporary credentials:\n\nPassword: {tempPassword}\n\nPlease use this password within the next hour.\n\nBest Regards,\nSunPro Jobs Team"
+                    Text = $"Dear Applicant,\n\nHere are your temporary credentials:\n\nPassword: {tempPassword}\n\nPlease use this password within the next 2 minutes.\n\nBest Regards,\nSunPro Jobs Team"
                 };
 
                 using (var client = new SmtpClient())

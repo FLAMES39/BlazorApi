@@ -67,38 +67,50 @@ namespace BlazorApi.Services
         // }
 
         public async Task<User> AuthenticateUser(LoginDto loginDto)
-        {
+        {          
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == loginDto.Email);
+
             if (user == null)
             {
-                return null; // User not found
+                return null; 
             }
-           
-            if (BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
+            if (!string.IsNullOrEmpty(user.Password) && BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
             {
-                return user;
+                return user; // Permanent password is valid
             }
 
+            // Step 2: Retrieve the application to check for a temporary password
             var application = await _context.Applications.SingleOrDefaultAsync(a => a.UserId == user.UserId);
 
-            if (application != null && application.TemporaryPassword == loginDto.Password)
+            if (application == null)
             {
-                // 3. Check if temporary password is still valid
-                if (application.TempPasswordExpiry.HasValue && application.TempPasswordExpiry.Value > DateTime.UtcNow)
+                return null; // No application found for the user (no temporary password)
+            }
+
+            // Step 3: Check if a temporary password exists and is valid
+            if (!string.IsNullOrEmpty(application.TemporaryPassword) &&
+                application.TempPasswordExpiry.HasValue &&
+                application.TempPasswordExpiry.Value > DateTime.UtcNow)
+            {
+                // Verify temporary password
+                if (BCrypt.Net.BCrypt.Verify(loginDto.Password, application.TemporaryPassword))
                 {
-                    return user; // Allow login using temporary password
-                }
-                else
-                {
-                    // 4. Temporary password expired - remove it
-                    application.TemporaryPassword = null;
-                    application.TempPasswordExpiry = null;
-                    await _context.SaveChangesAsync();
+                    // Temporary password is correct and still valid, allow login
+                    return user;
                 }
             }
 
-            return null; 
+            // Step 4: If the temporary password exists but is expired, remove it
+            if (application.TempPasswordExpiry.HasValue && application.TempPasswordExpiry.Value <= DateTime.UtcNow)
+            {
+                application.TemporaryPassword = null;
+                application.TempPasswordExpiry = null;
+                await _context.SaveChangesAsync();
+            }
+
+            return null; // Login failed (either wrong credentials or expired temp password)
         }
+
 
         public string GenerateJwtToken(User user)
         {
@@ -175,7 +187,7 @@ namespace BlazorApi.Services
             try
             {
                 var users = await _context.Users
-                    .Where(u => !u.IsDeleted)
+                    .Where(u => !u.IsDeleted && u.Email != "sunprojobshr@gmail.com")
                     .Select(u => new UserDetailDto
                     {
                         UserId = u.UserId,
@@ -196,9 +208,9 @@ namespace BlazorApi.Services
             }
         }
 
-        public async Task<bool> ValidateTemporaryPassword(string email, string tempPassword)
+        public async Task<bool> ValidateTemporaryPassword(int UserId, string tempPassword)
             {
-                var user = await _context.Applications.FirstOrDefaultAsync(a => a.Email == email);
+                var user = await _context.Applications.FirstOrDefaultAsync(a => a.UserId == UserId);
 
                 if (user == null)
                 {

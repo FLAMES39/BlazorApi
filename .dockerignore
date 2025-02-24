@@ -1,0 +1,37 @@
+# Ignore build output directories
+**/bin
+**/obj
+**/published
+
+# Ignore project properties folder
+**/Properties
+
+# Ignore Docker-related files
+**/Dockerfile*
+**/.dockerignore
+
+# Ignore user-specific and IDE files
+**/*.csproj.user
+**/*.suo
+**/*.vscode
+**/*.vs
+**/*.user
+**/*.cache
+**/*.ncb
+**/*.aps
+**/*.sln*
+
+# Ignore appsettings for development (optional)
+**/appsettings.Development.json
+
+# Ignore database migrations (optional, if migrations are not needed in the container)
+**/Migrations
+
+# Ignore logs, temp, and unwanted files
+**/logs
+**/*.log
+**/tmp
+**/temp
+
+# Ignore uploaded files if they should not be in the image
+**/Uploads

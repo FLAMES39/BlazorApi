@@ -34,6 +34,7 @@ namespace BlazorApi.Services
                 JobRequirements = jobDto.JobRequirements,
                 JobStatus = jobDto.JobStatus ?? "Not Applied",
                 JobType = jobDto.JobType,
+                Location = jobDto.Location,
                 PostingDate = jobDto.PostingDate,
                 SalaryRange = jobDto.SalaryRange,
                 ClosingDate = jobDto.ClosingDate,
