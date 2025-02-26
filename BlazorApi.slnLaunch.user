@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "BlazorApi.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "..\\SunPro_Jobs\\SunPro Jobs.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

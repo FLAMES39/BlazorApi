@@ -1,9 +1,13 @@
+# Build stage
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY . .
+RUN dotnet publish "BlazorApi.csproj" -o /published /p:UseAppHost=false
+
+# Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
-
 WORKDIR /app
+COPY --from=build /published .
 
-COPY published/ ./
-
-ENTRYPOINT {"dotnet","hELLO WORLD"}
-
-
+# Correct ENTRYPOINT format
+ENTRYPOINT ["dotnet", "BlazorApi.dll"]

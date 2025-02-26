@@ -1,11 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using BlazorApi.Models;
+using MySql.Data.MySqlClient;
+using System.Data.SqlClient;
 
 namespace BlazorApi.Data
 {
     public class DataContext : DbContext
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
+        
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.IsConfigured("Server=localhost;Database=job_recruitment_db;User=root;Password=SUNPRO100#;Port=3306");
+        //}
 
         public DbSet<User> Users { get; set; }
         public DbSet<Jobs> Jobs { get; set; }

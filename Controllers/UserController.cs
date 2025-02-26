@@ -3,24 +3,32 @@ using BlazorApi.Services;
 using BlazorApi.DTO;
 using BlazorApi.Models;
 using System.Security.Claims;
+using BlazorApi.Interfaces;
 
 namespace BlazorApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : Controller
+    public class UserController : ControllerBase
     {
         private AuthService _AuthService;
-        public UserController(AuthService AuthService)
+        private readonly IDataService _DataService;
+        //public UserController(AuthService AuthService)
+        //{
+        //    _AuthService = AuthService;
+        //}
+        public UserController(IDataService dataService)
+        
         {
-            _AuthService = AuthService;
+            _DataService = dataService;
         }
+
         [HttpPost("/register")]
         public async Task<ActionResult<User>> RegisterUser(UserDto userDto)
         {
             try
             {
-                var createdUser = await _AuthService.CreateUser(userDto);
+                var createdUser = await _DataService.CreateUser(userDto);
                 if (createdUser != null)
                 {
                     return Ok(new { Message = "Registration successful", UserId = createdUser.UserId });
@@ -65,7 +73,7 @@ namespace BlazorApi.Controllers
         {
             try
             {
-                var user = await _AuthService.DeleteUser(UserId);
+                var user = await _DataService.DeleteUser(UserId);
                 if (!user)
                 {
                     return Unauthorized("User Doesn't Exist");
@@ -84,7 +92,7 @@ namespace BlazorApi.Controllers
         {
             try
             {
-                var user = await _AuthService.updateUserDetails(updateUserDto);
+                var user = await _DataService.UpdateUserDetails(updateUserDto);
                 if (user != null)
                 {
                     return Ok(new { Message = "User updated successfully", UpdatedUser = user });
@@ -101,7 +109,7 @@ namespace BlazorApi.Controllers
         {
             try
             {
-                var user = await _AuthService.GetUserById(UserId);
+                var user = await _DataService.GetUserById(UserId);
                 if (user == null) return NotFound(new { Message = "User not found." });
 
                 return Ok(user);  // Return UserDetailDto
@@ -119,7 +127,7 @@ namespace BlazorApi.Controllers
         {
             try
             {
-                var users = await _AuthService.GetAllUsers();
+                var users = await _DataService.GetAllUsers();
                 if (users == null || !users.Any())
                 {
                     return NotFound(new { Message = "No users found." });
