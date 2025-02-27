@@ -1,4 +1,5 @@
 ﻿using BlazorApi.DTO;
+using BlazorApi.Interfaces;
 using BlazorApi.Models;
 using BlazorApi.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,15 @@ namespace BlazorApi.Controllers
     public class JobsController : Controller
     {
         private JobService _jobService;
+        private readonly IDjobService _DjobService;
 
-        public JobsController(JobService jobService)
+        //public JobsController(JobService jobService)
+        //{
+        //    _jobService = jobService;
+        //}
+        public JobsController( IDjobService djobService) 
         {
-            _jobService = jobService;
+            _DjobService = djobService;
         }
 
         [HttpPost("postjob")]
@@ -22,7 +28,7 @@ namespace BlazorApi.Controllers
         {
             try
             {
-                var results = await _jobService.PostJob(jobsDtocs);
+                var results = await _DjobService.PostJob(jobsDtocs);
                 return Ok(results);
             }
             catch (DbUpdateException ex)
@@ -43,7 +49,7 @@ namespace BlazorApi.Controllers
         {
             try
             {
-                var job = await _jobService.DeleteJob(JobId);
+                var job = await _DjobService.DeleteJob(JobId);
                 if (!job)
                 {
                     return NotFound("Job Not Found");
@@ -61,8 +67,8 @@ namespace BlazorApi.Controllers
         {
             try
             {
-                var allJobs = await _jobService.GetAllJobs();
-                if (allJobs == null || allJobs.Count == 0)
+                var allJobs = await _DjobService.GetAlLJobs();
+                if (allJobs == null)
                 {
                     return BadRequest("No Jobs Found");
                 }
@@ -80,7 +86,7 @@ namespace BlazorApi.Controllers
         {
             try
             {
-                var job = await _jobService.GetSingleJob(JobId);
+                var job = await _DjobService.GetSingleJob(JobId);
                 return Ok(job);
             }
             catch (Exception ex)
@@ -90,11 +96,11 @@ namespace BlazorApi.Controllers
         }
 
         [HttpPut("updateJobPost/{JobId}")]
-        public async Task<ActionResult<Jobs>> UpdateJobPost(int JobId, JobsDtocs jobsDtocs)
+        public async Task<ActionResult<Jobs>> UpdateJobPost( JobsDtocs jobsDtocs)
         {
             try
             {
-                var job = await _jobService.UpdateJobPost(JobId, jobsDtocs);
+                var job = await _DjobService.UpdateJob (jobsDtocs);
                 return Ok(job);
             }
             catch (Exception ex)

@@ -113,7 +113,6 @@ namespace BlazorApi.Services
             job.JobDescription = jobsDtocs.JobDescription?? job.JobDescription;
             job.JobRequirements = jobsDtocs.JobRequirements?? job.JobRequirements;
             job.JobType = jobsDtocs.JobType?? job.JobType;
-            job.JobDescription = jobsDtocs.JobDescription ?? job.JobDescription;
             job.SalaryRange = jobsDtocs.SalaryRange?? job.SalaryRange;
             job.PostingDate = jobsDtocs.PostingDate;
             job.ClosingDate = jobsDtocs.ClosingDate;

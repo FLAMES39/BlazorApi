@@ -2,6 +2,7 @@
 {
     public class JobsDtocs
     {
+        public  int JobId { get;  set; }
         public string JobName { get; set; }
 
         public string JobDescription { get; set; } = string.Empty;

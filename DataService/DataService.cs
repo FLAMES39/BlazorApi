@@ -90,9 +90,9 @@ namespace BlazorApi.DataService
 
                 // 3️⃣ Insert user and get the inserted ID
                 const string query = @"
-            INSERT INTO Users (Names, Email, Password, PhoneNumber) 
-            VALUES (@Names, @Email, @Password, @PhoneNumber);
-            SELECT LAST_INSERT_ID();";
+                    INSERT INTO Users (Names, Email, Password, PhoneNumber) 
+                    VALUES (@Names, @Email, @Password, @PhoneNumber);
+                    SELECT LAST_INSERT_ID();";
 
                 int userId = await connection.ExecuteScalarAsync<int>(query, new
                 {

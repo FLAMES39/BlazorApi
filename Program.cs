@@ -99,7 +99,7 @@ using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ?? Register Controllers, Swagger, and CORS
+//  Register Controllers, Swagger, and CORS
 builder.Services.AddControllers();
 builder.Services.AddAuthorization();
 builder.Services.AddSwaggerGen();
@@ -113,7 +113,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-// ?? Register Services (BEFORE `builder.Build()`)
+//  Register Services (BEFORE `builder.Build()`)
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<JobService>();
 builder.Services.AddScoped<IJobs, JobService>();
@@ -122,32 +122,36 @@ builder.Services.AddScoped<ApplicationService>();
 builder.Services.AddScoped<TemporaryCredentialsService>();
 builder.Services.AddScoped<ITempCredemtials, TemporaryCredentialsService>();
 builder.Services.AddScoped<IApplications, ApplicationService>();
-
-// ?? Register Database Context (EF Core)
+//  Register Database Context (EF Core)
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("MariaDbConnection"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("MariaDbConnection"))));
 
-// ?? Register Dapper-Based Service (Singleton)
+// Register Dapper-Based Service (Singleton)
 var connectionString = "Server=localhost;Database=job_recruitment_db;User=root;Password=SUNPRO100#;Port=3306";
 builder.Services.AddSingleton<IDataService>(sp =>
 {
     var logger = sp.GetRequiredService<ILogger<DataService>>();
     return new DataService(connectionString, logger);
 });
+builder.Services.AddScoped<IDjobService>(sp =>
+{
+    var logger = sp.GetRequiredService<ILogger<DjobService>>(); // Inject logger
+    return new DjobService(connectionString, logger); // Pass connection string manually
+});
 
-// ?? Build the application AFTER service registrations
+// Build the application AFTER service registrations
 var app = builder.Build();
 
-// ?? Configure Middleware
+// Configure Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// ?? CORS should be BEFORE `UseAuthorization()`
+//CORS should be BEFORE `UseAuthorization()`
 app.UseCors(builder =>
     builder.AllowAnyOrigin()
            .AllowAnyMethod()
@@ -156,16 +160,16 @@ app.UseCors(builder =>
 app.UseHttpsRedirection();
 app.UseAuthorization();
 
-// ?? Serve Static Files (Only Once)
+//Serve Static Files (Only Once)
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Uploads")),
     RequestPath = "/Uploads"
 });
 
-// ?? Map Controllers
+// Map Controllers
 app.MapControllers();
 
-// ?? Run Application
+//Run Application
 app.Run();
 
